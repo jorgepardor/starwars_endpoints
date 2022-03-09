@@ -1,14 +1,9 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
-import os
-from flask import Flask, request, jsonify, url_for
-from flask_migrate import Migrate
-from flask_swagger import swagger
-from flask_cors import CORS
+
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+from flask_sqlalchemy import SQLAlchemy
+
 #from models import Person
 
 app = Flask(__name__)
@@ -20,7 +15,7 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 
-# Handle/serialize errors like a JSON object
+# Handle/seriali
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
