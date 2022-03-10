@@ -86,7 +86,7 @@ class Planets(db.Model):
             "population": self.population,
             "climate_id": self.climate_id,
             "terrain_id": self.terrain_id,
-            "surface_water": self.surface.id,
+            "surface_water": self.surface_id,
         }
 
 class Starships(db.Model):
@@ -100,68 +100,69 @@ class Starships(db.Model):
     lenght = Column(Integer)
     crew = Column(Integer)
     passengers = Column(Integer)
-    max_atmopheric_speed = Column(Integer)
+    max_atmospheric_speed = Column(Integer)
     hyperdrive_rating = Column(Integer)
     mglt = Column(Integer)
     cargo_capacity = Column(Integer)
     consumable = Column(Integer)
     favorites = db.relationship('Favorite', backref = 'starships')
 
+    def serialize(self):
+        return {
+            "name": self.name,
+            "image": self.image,
+            "starship_class": self.starship_class,
+            "manufacturer": self.manufacturer,
+            "cost_in_credits": self.cost_in_credits,
+            "lenght": self.lenght,
+            "crew": self.crew,
+            "passengers": self.passengers,
+            "max_atmospheric_speed": self.max_atmospheric_speed,
+            "hyperdrive_rating": self.hyperdrive_rating,
+            "mglt": self.mglt,
+            "cargo_capacity": self.cargo_capacity,
+            "consumable": self.consumable,
+        }
+
 class Homeworld(db.Model):
     __tablename__ = 'homeworld'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     planet_id = Column(Integer, ForeignKey('planets.id'), nullable=False)
     char_id = Column(Integer, ForeignKey('characters.id'), nullable=False)
 
 class Pilots(db.Model):
     __tablename__ = 'pilots'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     starships_id = Column(Integer, ForeignKey('starships.id'), nullable=False)
     char_id = Column(Integer, ForeignKey('characters.id'), nullable=False)
 
 class ClimateSelect(db.Model):
     __tablename__ = 'climate_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
 
 class TerrainSelect(db.Model):
     __tablename__ = 'terrain_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
 
 class GenderSelect(db.Model):
     __tablename__ = 'gender_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
 
 class ColorSelect(db.Model):
     __tablename__ = 'color_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     color_name = Column(String(72), nullable=False, unique=True)
     color_value = (String(72))
 
 class ShipClassSelect(db.Model):
     __tablename__ = 'ship_class_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
 
 class ShipMakerSelect(db.Model):
     __tablename__ = 'ship_maker_select'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
