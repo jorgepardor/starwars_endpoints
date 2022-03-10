@@ -5,27 +5,38 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     username = Column(String(32), nullable=False, unique=True)
     user_password = Column(String(32), nullable=False)
     user_avatar = Column(String(64))
+    is_active= Column(db.Boolean(), unique=False, nullable=False)
+    favorites = db.relationship('Favorite', backref = 'user')
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "user_avatar": self.user_avatar,
+        }
 
 class Favorite(db.Model):
-    __tablename__ = 'favorite'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     ship_id = Column(Integer, ForeignKey('starships.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
     planet_id = Column(Integer, ForeignKey('planets.id'))
     char_id = Column(Integer, ForeignKey('characters.id'))
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "ship_id": self.ship_id,
+            "user_id": self.user_id,
+            "planet_id": self.planet_id,
+            "char_id": self.char_id,
+        }
+
 class Characters(db.Model):
     __tablename__ = 'characters'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False)
     gender_id = Column(Integer, ForeignKey('gender_select.id'))
@@ -35,12 +46,24 @@ class Characters(db.Model):
     hair_color = Column(Integer, ForeignKey('color_select.id'))
     skin_color = Column(Integer, ForeignKey('color_select.id'))
     eye_color = Column(Integer, ForeignKey('color_select.id'))
-    birht_year = Column(Integer)
+    birth_year = Column(Integer)
+    favorites = db.relationship('Favorite', backref = 'characters')
+
+    def serialize(self):
+        return {
+            "name": self.name,
+            "gender_id": self.gender_id,
+            "image": self.image,
+            "height": self.height,
+            "mass": self.mass,
+            "hair_color": self.hair_color,
+            "skin_color": self.skin_color,
+            "eye_color": self.eye_color,
+            "birth_year": self.birth_year,
+        }
 
 class Planets(db.Model):
     __tablename__ = 'planets'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
     image = Column(String(250))
@@ -49,13 +72,25 @@ class Planets(db.Model):
     gravity = Column(Integer)
     population = Column(Integer)
     climate_id = Column(Integer, ForeignKey('climate_select.id'))
-    terrain_id = Column(Integer, ForeignKey('terrain_select.id') )
+    terrain_id = Column(Integer, ForeignKey('terrain_select.id'))
     surface_water = Column(Integer)
+    favorites = db.relationship('Favorite', backref = 'planets')
+
+    def serialize(self):
+        return {
+            "name": self.name,
+            "image": self.image,
+            "rotation_period": self.rotation_period,
+            "orbital_period": self.orbital_period,
+            "gravity": self.gravity,
+            "population": self.population,
+            "climate_id": self.climate_id,
+            "terrain_id": self.terrain_id,
+            "surface_water": self.surface.id,
+        }
 
 class Starships(db.Model):
     __tablename__ = 'starships'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(72), nullable=False, unique=True)
     image = Column(String(250))
@@ -70,6 +105,7 @@ class Starships(db.Model):
     mglt = Column(Integer)
     cargo_capacity = Column(Integer)
     consumable = Column(Integer)
+    favorites = db.relationship('Favorite', backref = 'starships')
 
 class Homeworld(db.Model):
     __tablename__ = 'homeworld'
