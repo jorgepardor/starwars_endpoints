@@ -28,11 +28,11 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
-def handle_hello():
+@app.route('/check', methods=['GET'])
+def check_connection():
 
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "msg": "Hello user, this is working!"
     }
 
     return jsonify(response_body), 200
@@ -57,6 +57,12 @@ def get_single_user(user_id):
     else: 
         return jsonify ({'error': 'the user doesnt exist'}), 404
     return jsonify({'response':user.serialize()})
+
+@app.route('/users/<int:id>/favorites', methods=['GET'])
+def get_favorites_by_user(id):
+    favorites = Favorite.query.filter_by(user_id=id)
+    return jsonify({'response': list(map(lambda favorite: favorite.serialize(), favorites))})
+   
 
 # Generating endpoints for all the listed characters and to display all the available info on a single character
 

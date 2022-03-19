@@ -29,10 +29,10 @@ class Favorite(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "ship_id": self.ship_id,
             "user_id": self.user_id,
-            "planet_id": self.planet_id,
-            "char_id": self.char_id,
+            "ship_id": Starships.query.get(self.ship_id).serialize(),
+            "planet_id": Planets.query.get(self.planet_id).serialize(),
+            "char_id": Characters.query.get(self.char_id).serialize()
         }
 
 class Characters(db.Model):
@@ -86,7 +86,7 @@ class Planets(db.Model):
             "population": self.population,
             "climate_id": self.climate_id,
             "terrain_id": self.terrain_id,
-            "surface_water": self.surface_id,
+            "surface_water": self.surface_water,
         }
 
 class Starships(db.Model):
